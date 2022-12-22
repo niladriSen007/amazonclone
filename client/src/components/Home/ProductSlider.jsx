@@ -4,6 +4,10 @@ import "react-multi-carousel/lib/styles.css";
 import { Divider } from "@mui/material";
 import "./ProductSlider.scss";
 import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {useDispatch, useSelector} from "react-redux"
+import { publicRequest } from "../../requestMethods";
+import { getProducts } from "../../store/apiCalls";
 
 const responsive = {
   desktop: {
@@ -20,7 +24,31 @@ const responsive = {
   },
 };
 
-const ProductSlider = ({ title }) => {
+const ProductSlider = ({ title,prod=[] }) => {
+
+  
+ // setAllProducts(prod)
+
+
+
+ // useEffect(()=>{
+    // const getAllProducts = async()=>{
+    //  try
+    //  {
+    //   const res = await publicRequest.get(`/products`);
+    //   setAllProducts(res.data)
+    //  }
+    //  catch(e)
+    //  {
+    //   console.log(e);
+    //  }
+    // }
+
+    // getAllProducts();
+  // },[])
+
+
+
   return (
     <div className="products_section">
       <div className="products_deal">
@@ -43,8 +71,8 @@ const ProductSlider = ({ title }) => {
         itemClass="carousel-item-padding-40-px"
         containerClass="carousel-container"
       >
-        {products.map((product) => (
-          <NavLink to="/products/1">
+        {prod.map((product) => (
+          <NavLink to={`/products/product/${product._id}`}>
             <div className="products_items" key={product.id}>
               <div className="product_img">
                 <img src={product.url} alt={product.id} />

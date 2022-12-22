@@ -15,6 +15,8 @@ import { Avatar, Badge } from "@mui/material";
 
 const Navbar = () => {
   // const cartCount = useSelector(state=>state.cart)
+
+  const cart = useSelector(state=>state.cart)
   return (
     <>
       <header>
@@ -40,8 +42,8 @@ const Navbar = () => {
               <NavLink to="/signin">sign in</NavLink>
             </div>
             <div className="cart_btn">
-              <Badge badgeContent={4} color="primary">
-                <NavLink to="/products/:id"><ShoppingCartOutlinedIcon id="icon" /></NavLink>
+              <Badge badgeContent={cart.quantity} color="primary">
+                <NavLink to="/cart"><ShoppingCartOutlinedIcon id="icon" /></NavLink>
               </Badge>
               <p>Cart</p>
             </div>

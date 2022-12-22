@@ -57,7 +57,7 @@ const App = () => {
           element:<SignUp />
         },
         {
-          path:"/products/:id",
+          path:"/products/product/:id",
           element:<Product />
         },
         {

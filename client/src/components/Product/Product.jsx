@@ -1,45 +1,91 @@
 import { Divider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Product.scss";
 import { useTime } from 'react-timer-hook';
+import { useParams } from "react-router";
+import { publicRequest } from "../../requestMethods";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../store/cartSlice";
 
 
 const Cart = () => {
+
+
+
+  const [product,setProduct] = useState({
+    url:"",
+    title:{
+      shortTitle:"",
+      longTitle:"",
+    },
+    price: {
+      mrp: 0,
+      cost: 0,
+      discount: ''
+  },
+  description:"",
+  
+  })
+
+  const params = useParams()
+  // console.log(params.id)
+  const productId = params.id;
 
   const {
     seconds,
     minutes,
     hours,
-    ampm,
   } = useTime({ format: '12-hour'});
+
+
+  // console.log(productId)
+
+
+  useEffect(()=>{
+    const getProduct = async()=>{
+      const prod = await publicRequest.get(`/products/product/${productId}`)
+      setProduct(prod.data)
+      // console.log(prod.data)
+    }
+    getProduct()
+  },[])
+
+
+  const dispatch = useDispatch()
+const handleAddCart = (prod) =>{
+  dispatch(addProduct({product:prod,amount:prod.price.mrp,quantity:1}))
+  // console.log(prod)
+}
+
+  // console.log(product)
 
   return (
     <div className="cart_section">
       <div className="cart_container">
         <div className="left_cart">
           <img
-            src="https://rukminim1.flixcart.com/image/300/300/kll7bm80/smartwatch/c/1/n/43-mo-sw-sense-500-android-ios-molife-original-imagyzyycnpujyjh.jpeg?q=70"
+            src={product.url}
             alt="product"
           />
           <div className="cart_btn">
-            <button className="cart_btn1">Add to Cart</button>
+            <button className="cart_btn1" onClick={()=>handleAddCart(product)}>Add to Cart</button>
             <button className="cart_btn2">Buy Now</button>
           </div>
         </div>
         <div className="right_cart">
-          <h3>Fitness Gear</h3>
-          <h4>Molife Sense 500 Smartwatch (Black Strap, Freesize)</h4>
+          <h3>{product.title.shortTitle}</h3>
+          <h4>{product.title.longTitle}</h4>
           <Divider />
-          <p className="mrp">M.R.P : ₹2499</p>
+          <p className="mrp">M.R.P : ₹{product.price.mrp}</p>
           <p>
-            Deal of the Day : <span style={{ color: "#B12704" }}>₹2199.00</span>
+            Deal of the Day : <span style={{ color: "#B12704" }}>₹{product.price.cost}.00</span>
           </p>
           <p>
             You save : <span style={{ color: "#B12704" }}> ₹300 (15%) </span>
           </p>
           <div className="discount_box">
             <h5>
-              Deal of the Day : <span style={{ color: "red" }}>Extra 10% off</span>{" "}
+              Deal of the Day : <span style={{ color: "red" }}>{product.price.discount}</span>{" "}
             </h5>
             <h5>
             Ends in {24 - hours}h {60 - minutes}m {60 - seconds}s
@@ -69,12 +115,7 @@ const Cart = () => {
                 letterSpacing: "0.1px",
               }}
             >
-              The Molife Sense 500, a brilliant smartwatch with a beautiful
-              large display. Say hello to the infinity 1.7-inch display with
-              2.5D curved edges. Thanks to seamless Bluetooth 5.0 connectivity,
-              you wont have to keep waiting. Bring a change to your outfit every
-              day with changeable straps. A splash of color every day keeps the
-              boredom away.',
+              {product.description}
             </span>
           </p>
         </div>
